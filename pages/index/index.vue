@@ -141,6 +141,14 @@ export default {
       uni.navigateTo({
         url: `/pages/answer/answer?path_id=${this.path_id}` //`/pages/answer/index?price=${this.price}&path_id=${this.path_id}`
       });
+      if (uni.getStorageSync("zwGameId")) {
+          zwDivine.recordUserInfo({
+            name: "2020你会成为有钱人吗?",
+            gender: "",
+            birthday: "",
+            extra: JSON.stringify({ openid: this.openid })
+          });
+        }
     },
     toReport() {
       //#ifdef H5

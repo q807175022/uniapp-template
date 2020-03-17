@@ -201,7 +201,7 @@ export default {
         user_id: this.user_id,
         // #ifdef H5
         callback: encodeURIComponent(
-          `${window.location.origin}/uni/toff2020#/pages/result/result`
+          `${window.location.origin}/uni/toff2020/pages/result/result`
         ),
         callbackType: 1,
         // #endif

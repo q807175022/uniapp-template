@@ -86,7 +86,7 @@
     </view>
     <cmd-transition v-if="over || !tests[0].show" name="fade-up">
       <view class="checkview">
-        <view class="btn" @click="onSubmit('MP')" v-if="over">
+        <view class="btn" @click="(payVisible = true), recordUv(5)" v-if="over">
           立即查看测试结果
         </view>
         <view class="btn" @click="startGame" v-else>
@@ -96,20 +96,18 @@
     </cmd-transition>
 
     <!-- 支付确认 -->
-    <!-- #ifdef H5 -->
     <pay-dialog
       :visible.sync="payVisible"
       title="2020你会成为有钱人吗"
+      :original="original"
       @success="onSubmit"
     ></pay-dialog>
-    <!-- #endif -->
   </scroll-view>
 </template>
 
 <script>
-// #ifdef H5
 import payDialog from "yz-utils/pay-dialog/pay-dialog";
-// #endif
+
 import cmdTransition from "@/components/cmd-transition/cmd-transition";
 import answerList from "./answer-list.json";
 import { deepClone } from "@/utils/utils.js";
@@ -121,6 +119,12 @@ export default {
   data() {
     let _answerList = deepClone(answerList);
     return {
+      // #ifdef MP
+      original: "88.00",
+      // #endif
+      // #ifdef MP
+      original: "188.00",
+      // #endif
       windowHeight: app.globalData.systemInfo.windowHeight,
       payVisible: false,
       currentTest: 0,
@@ -133,7 +137,6 @@ export default {
   },
   onLoad(option) {
     this.getTests();
-    console.log(uni.getStorageSync("zwUid"));
   },
   computed: {
     ...mapGetters(["price", "path_id", "openid", "tid"]),
@@ -153,9 +156,7 @@ export default {
   },
   components: {
     cmdTransition,
-    // #ifdef H5
     payDialog
-    // #endif
   },
   methods: {
     toggleClass(idx, i) {
@@ -237,24 +238,8 @@ export default {
     onSubmit(e) {
       if (this.disabledBtn) return false;
       let zwGameId = uni.getStorageSync("zwGameId");
-      // #ifdef H5
-      // H5环境下先弹框提示支付方式
-      if (e === "MP") {
-        this.payVisible = true;
-        this.recordUv(5);
-        if (zwGameId) {
-          zwDivine.recordUserInfo({
-            name: "2020你会成为有钱人吗?",
-            gender: "",
-            birthday: "",
-            extra: JSON.stringify({ openid: this.openid })
-          });
-        }
-        return false;
-      }
-      // #endif
-      let answer_list = Object.assign([], this.tests.slice(0, 20));
 
+      let answer_list = Object.assign([], this.tests.slice(0, 20));
       // 总分
       let score = 0;
       // 占比偏向图
@@ -336,7 +321,7 @@ export default {
         path_id: this.path_id,
         // #ifdef H5
         callback: encodeURIComponent(
-          `${window.location.origin}/uni/toff2020#/pages/result/result`
+          `${window.location.origin}/uni/toff2020/pages/result/result`
         ),
         callbackType: 1,
         // #endif
@@ -392,11 +377,11 @@ export default {
                   duration: 1500,
                   icon: "none"
                 });
-                setTimeout(() => {
-                  uni.redirectTo({
-                    url: `/pages/recover/recover?user_id=${user_id}&path_id=${this.path_id}`
-                  });
-                }, 1500);
+                // setTimeout(() => {
+                //   uni.redirectTo({
+                //     url: `/pages/recover/recover?user_id=${user_id}&path_id=${this.path_id}`
+                //   });
+                // }, 1500);
               }
             },
             fail: pay_err => {

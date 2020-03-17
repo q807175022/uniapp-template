@@ -8,6 +8,8 @@ import { decodeOpenid } from "./api";
 import { mapMutations } from "vuex";
 export default {
   onLaunch: function(option) {
+    console.log("onLaunch=====", option);
+
     if (option.query.path_id) {
       this.set_path_id(option.query.path_id);
     }
