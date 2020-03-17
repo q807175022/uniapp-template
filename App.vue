@@ -8,10 +8,11 @@ import { decodeOpenid } from "./api";
 import { mapMutations } from "vuex";
 export default {
   onLaunch: function(option) {
-    this.applogin();
     if (option.query.path_id) {
       this.set_path_id(option.query.path_id);
     }
+
+    this.applogin();
 
     // 版本检测
     // #ifndef H5
@@ -35,11 +36,15 @@ export default {
     // #endif
 
     // #ifdef H5
+    if (option.query.zwGameId) {
+      uni.setStorageSync("zwGameId", option.query.zwGameId);
+      uni.setStorageSync("zwUid", option.query.zwUid);
+    }
     importSDK_zw();
     // #endif
   },
   methods: {
-    ...mapMutations(["login", "set_path_id"]),
+    ...mapMutations("index", ["login", "set_path_id"]),
     applogin(count = 0) {
       const that = this;
       // #ifndef H5
@@ -51,7 +56,11 @@ export default {
         success(res) {
           console.log(res);
           if (res.errMsg == "login:ok") {
-            decodeOpenid({ code: res.code, tid: that.$store.state.tid })
+            decodeOpenid({
+              code: res.code,
+              tid: that.$store.getters.tid,
+              is_toutiao: 1
+            })
               .then(function(response) {
                 that.login(response);
               })
@@ -63,6 +72,8 @@ export default {
           }
         },
         fail(err) {
+          console.log(err);
+
           uni.hideLoading();
           uni.showModal({
             title: "提示",
@@ -73,6 +84,9 @@ export default {
       });
       // #endif
     }
+  },
+  globalData: {
+    systemInfo: uni.getSystemInfoSync()
   }
 };
 </script>
@@ -85,9 +99,7 @@ uni-page-head {
   display: none;
 }
 /* #endif */
-/* #ifndef H5 */
 @import url("./utils/reset-mp.scss");
-/* #endif */
 .container {
   width: 100%;
   min-height: 100vh;

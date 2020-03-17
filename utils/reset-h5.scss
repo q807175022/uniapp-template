@@ -1,26 +1,55 @@
-body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, li, dd, dt, form, fieldset, legend, td, th, input, textarea, div {
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+dl,
+li,
+dd,
+dt,
+form,
+fieldset,
+legend,
+td,
+th,
+input,
+textarea,
+div {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 html {
-  font-size: 13.33333333vw!important;
+  font-size: 13.33333333vw !important;
   font-size: -webkit-calc(100vw / 750 * 100) !important;
   font-size: calc(100vw / 750 * 100) !important;
 }
 
-html, body {
+html,
+body {
   min-height: 100%;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100% !important;
 }
-
-i, em {
-  font-style: normal
+body {
+  font-size: 14px;
+}
+i,
+em {
+  font-style: normal;
 }
 
-ul, li, dl, dd, dt {
+ul,
+li,
+dl,
+dd,
+dt {
   list-style: none;
 }
 
@@ -28,7 +57,9 @@ a {
   text-decoration: none;
 }
 
-button, input, textarea {
+button,
+input,
+textarea {
   background-color: transparent;
   padding: 0;
   margin: 0;
@@ -39,7 +70,8 @@ button, input, textarea {
   resize: none;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
 }
 
@@ -47,12 +79,17 @@ input:focus {
   -webkit-user-modify: read-write-plaintext-only;
 }
 
-input[type=button], input[type=submit], input[type=number], input[type=file], button {
+input[type="button"],
+input[type="submit"],
+input[type="number"],
+input[type="file"],
+button {
   cursor: pointer;
   -webkit-appearance: none;
 }
 
-input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
   -webkit-appearance: none !important;
 }
 
@@ -65,7 +102,9 @@ img {
 
 /*清除浮动*/
 
-*, ::before, ::after {
+*,
+::before,
+::after {
   padding: 0;
   margin: 0;
   -webkit-box-sizing: border-box;
@@ -75,7 +114,8 @@ img {
   /*清除移动端点击高亮效果*/
 }
 
-.clearfix::before, .clearfix::after {
+.clearfix::before,
+.clearfix::after {
   content: "";
   display: block;
   height: 0;

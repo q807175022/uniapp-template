@@ -1,15 +1,36 @@
 {
   "pages": [
     {
-      "path": "pages/index/index",
+      "path": "pages/index/index"
+    },
+    {
+      "path": "pages/answer/answer",
       "style": {
-        "navigationBarTitleText": "uni-app"
+        "navigationBarTitleText": "正在测试"
       }
+    },
+    {
+      "path": "pages/result/result",
+      "style": {
+        "navigationBarTitleText": "专业财商报告"
+      }
+    },
+    {
+      "path": "pages/report/report",
+      "style": {
+        "navigationBarTitleText": "历史报告记录"
+      }
+    },
+    {
+      "path": "pages/recover/recover"
+    },
+    {
+      "path": "pages/bindAgent"
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "2020你会成为有钱人吗",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   }

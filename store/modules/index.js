@@ -6,8 +6,8 @@
 
 const state = {
   price: 0,
-  tid: 3,
-  appid: "tt71a0071dee8aabe3",
+  tid: 4,
+  appid: "tt3e7848c5a15255d5",
   openid: "",
   path_id: null,
   agent_id: null,
@@ -20,7 +20,7 @@ const mutations = {
     state.price = response.price;
     uni.setStorageSync("price", response.price);
     uni.setStorageSync("openid", response.openid);
-    if (!state.path_id) {
+    if (!state.path_id || response.agent_id) {
       state.path_id = response.path_id;
       uni.setStorageSync("path_id", response.path_id);
     }

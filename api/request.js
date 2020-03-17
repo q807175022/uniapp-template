@@ -35,7 +35,7 @@ let baseUrl =
 // #ifdef H5
 let baseUrl =
   process.env.NODE_ENV === "development"
-    ? "https://dev.ya73r.cn"
+    ? "http://class.amghpry.cn:443"
     : window.location.origin;
 // #endif
 
@@ -61,6 +61,10 @@ export default {
       // config.header = {
       // 		"token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       // }
+      let zwUid = uni.getStorageSync("zwUid");
+      if (zwUid) {
+        config.data.openid = zwUid;
+      }
       uni.showLoading({
         title: "请稍候"
       });
@@ -76,7 +80,7 @@ export default {
           content: res.msg || "请求错误:" + response.statusCode,
           showCancel: false
         });
-        return Promise.reject(res.msg || "error");
+        return Promise.reject(res);
       }
       //判断返回状态 执行相应操作
     }
@@ -104,17 +108,6 @@ export default {
 
       options.complete = response => {
         let statusCode = response.statusCode;
-
-        if (process.env.NODE_ENV === "development") {
-          if (statusCode === 200) {
-            console.log(
-              "【" +
-                _config.requestId +
-                "】 结果：" +
-                JSON.stringify(response.data)
-            );
-          }
-        }
         if (this.interceptor.response) {
           let newResponse = this.interceptor.response(response);
           if (newResponse) {
@@ -188,7 +181,6 @@ export default {
  */
 function _reqlog(req) {
   if (process.env.NODE_ENV === "development") {
-    console.log("【" + req.requestId + "】 地址：" + req.url);
     if (req.data) {
       console.log(
         "【" + req.requestId + "】 请求参数：" + JSON.stringify(req.data)
@@ -202,17 +194,7 @@ function _reqlog(req) {
  * 响应接口日志记录
  */
 function _reslog(res) {
-  let _statusCode = res.statusCode;
   if (process.env.NODE_ENV === "development") {
-    console.log("【" + res.config.requestId + "】 地址：" + res.config.url);
-    if (res.config.data) {
-      console.log(
-        "【" +
-          res.config.requestId +
-          "】 请求参数：" +
-          JSON.stringify(res.config.data)
-      );
-    }
     console.log(
       "【" + res.config.requestId + "】 响应结果：" + JSON.stringify(res)
     );
