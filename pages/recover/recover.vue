@@ -48,7 +48,7 @@
           好评率：<text class="text font-red">98.9%</text>
         </view>
       </view>
-      <view class="btn" @click="onSubmit('MP')">立即支付</view>
+      <view class="btn" @click="payVisible = true">立即支付</view>
     </view>
     <!-- 协议 -->
     <view style="padding:36rpx 0 24rpx;">
@@ -62,6 +62,7 @@
     <view class="comment-box">
       <swiper
         class="swiper"
+        :circular="true"
         :vertical="true"
         :display-multiple-items="4"
         :autoplay="true"
@@ -90,21 +91,19 @@
       :visible.sync="protocolVisible"
       @set-protocol="protocol = true"
     ></protocol-dialog>
-    <!--  -->
-    <!-- #ifdef H5 -->
+    <!-- 支付确认 -->
     <pay-dialog
       :visible.sync="payVisible"
       title="2020你会成为有钱人吗"
+      original="188.00"
+      :show-count="false"
       @success="onSubmit"
     ></pay-dialog>
-    <!-- #endif -->
   </view>
 </template>
 
 <script>
-// #ifdef H5
 import payDialog from "yz-utils/pay-dialog/pay-dialog";
-// #endif
 import comment from "@/utils/evaluate.json";
 import serviceDialog from "yz-utils/service-dialog/service-dialog";
 import protocolDialog from "yz-utils/protocol-dialog/protocol-dialog";
@@ -131,14 +130,7 @@ export default {
     };
   },
   onLoad(option) {
-    console.log("onLoad======", JSON.stringify(option));
-    this.user_id = option.user_id;
-    this.countDown();
-  },
-  onShow() {
-    this.recordUv(10);
-
-    if (this.user_id === undefined) {
+    if (option.user_id === undefined) {
       uni.showModal({
         content: "缺少参数！",
         success(res) {
@@ -147,6 +139,10 @@ export default {
           });
         }
       });
+    } else {
+      this.user_id = option.user_id;
+      this.countDown();
+      this.recordUv(10);
     }
   },
   filters: {
@@ -156,9 +152,7 @@ export default {
   },
   computed: mapGetters(["path_id", "price", "tid", "openid"]),
   components: {
-    // #ifdef H5
     payDialog,
-    // #endif
     serviceDialog,
     yzProtocol,
     protocolDialog
@@ -187,15 +181,7 @@ export default {
     },
     onSubmit(e) {
       let zwGameId = uni.getStorageSync("zwGameId");
-      // #ifdef H5
-      // H5环境下先弹框提示支付方式
-      if (e === "MP") {
-        this.payVisible = true;
-        return false;
-      }
-      // #endif
       if (this.disabledBtn) return false;
-
       let params = {
         path_id: this.path_id,
         user_id: this.user_id,

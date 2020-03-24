@@ -14,13 +14,23 @@
       </text>
     </view>
     <view class="protocol-tips">
-      您的个人信息仅用于生成分析报报告，不会用于其他用途
+      <view>您的个人信息仅用于生成分析报报告，不会用于其他用途</view>
+      <!-- #ifdef MP -->
+      <view>本产品仅供娱乐,测试结果与平台无关!</view>
+      <!-- #endif -->
     </view>
     <view class="protocol-link">
-      <view>已为{{ number }}人生成报告</view>
-      <view :style="{ color: theme }" @click="$emit('redirect')"
-        >点击查看历史订单</view
+      <view class="service-nav" @click="$emit('service')">
+        <image src="../static/icon-help.svg" mode="widthFix" />
+        <text :style="{ color: theme }">联系客服</text>
+      </view>
+      <view
+        class="history-nav"
+        :style="{ color: theme }"
+        @click="$emit('redirect')"
       >
+        点击查看历史订单
+      </view>
     </view>
   </view>
 </template>
@@ -55,24 +65,32 @@ export default {
 <style lang="scss" scoped>
 .protocol-container {
   width: 690rpx;
-  margin: 0 auto;
   color: #fff;
+  position: absolute;
+  left: 30rpx;
+  top: 1200rpx;
 }
 .protocol {
   display: flex;
   align-items: center;
 }
 .protocol image {
-  width: 32rpx;
-  height: 32rpx;
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 12rpx;
 }
 .protocol text {
   font-size: 28rpx;
-  color: #fff;
+  color: #fff9f9;
 }
 .protocol-tips {
-  line-height: 72rpx;
   font-size: 26rpx;
+  color: #fff9f9;
+  font-weight: lighter;
+  padding: 16rpx 0;
+}
+.protocol-tips view {
+  line-height: 42rpx;
 }
 .protocol-link {
   display: flex;
@@ -80,8 +98,22 @@ export default {
   justify-content: space-between;
   font-size: 26rpx;
 }
-.protocol-link view:nth-of-type(2) {
-  font-size: 32rpx;
+.service-nav {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  color: #ffe5bc;
+  font-size: 30rpx;
+  text-decoration: underline;
+}
+.service-nav image {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 12rpx;
+}
+.history-nav {
+  position: relative;
+  font-size: 30rpx;
   text-decoration: underline;
 }
 </style>

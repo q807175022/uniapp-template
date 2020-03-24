@@ -1,9 +1,13 @@
 import request from "./request";
-
+// 计算OPENID
 export function decodeOpenid(params) {
   return request.get("/api/getTouTiaoOpenId", params);
 }
-
+// 绑定代理商
+export function bindAgents(params) {
+  return request.post("/api/agent/bind_agents", params);
+}
+// 获取首页链接
 export function getIndexUrl(params) {
   return request.post("/api/getLink", params);
 }

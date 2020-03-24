@@ -2,11 +2,11 @@
   <view class="container">
     <view class="block-line">
       <view class="label">代理商名称:</view>
-      <view class="value">{{agent_name}}</view>
+      <view class="value">{{ agent_name }}</view>
     </view>
     <view class="block-line">
       <view class="label">代理商ID:</view>
-      <view class="value">{{agent_id}}</view>
+      <view class="value">{{ agent_id }}</view>
     </view>
 
     <view class="user-none" v-if="!nickName">
@@ -19,7 +19,7 @@
     <view v-else>
       <view class="block-line">
         <view class="label">用户昵称:</view>
-        <view class="value">{{nickName}}</view>
+        <view class="value">{{ nickName }}</view>
       </view>
       <view class="block-line">
         <view class="label">用户头像:</view>
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { bindAgents } from "@/api";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -43,6 +45,7 @@ export default {
       nickName: ""
     };
   },
+  computed: mapGetters(["tid", "openid", "path_id"]),
   onLoad(opt) {
     console.log(opt);
     this.agent_id = opt.agent_id;
@@ -82,55 +85,30 @@ export default {
       });
     },
     bindAgent() {
-      const that=this;
+      const that = this;
       uni.showLoading({
         title: "处理中"
       });
-      this.$ajax(
-        "/api/agent/bind_agents",
-        {
-          tid: this.$store.state.tid,
-          agent_id: this.agent_id,
-          openid: this.$store.state.openid,
-          avatarUrl: this.avatarUrl,
-          nickName: this.nickName
-        },
-        { method: "POST" }
-      )
-        .then(res => {
-          uni.hideLoading();
-          if (res.code == 200) {
-            uni.showModal({
-              title: "提示",
-              content: "绑定代理商成功!",
-              confirmText: "前往首页",
-              success: function(res) {
-                if (res.confirm) {
-                  let path_id = that.$store.state.path_id || uni.getStorageSync("path_id");
-                  uni.reLaunch({
-                    url: "/pages/index?path_id=" +path_id
-                  });
-                } else if (res.cancel) {
-                  console.log("用户点击取消");
-                }
-              }
-            });
-          } else {
-            uni.showModal({
-              title: "提示",
-              content: "绑定失败!!!",
-              showCancel: false
-            });
+      bindAgents({
+        tid: this.tid,
+        agent_id: this.agent_id,
+        openid: this.openid,
+        avatarUrl: this.avatarUrl,
+        nickName: this.nickName
+      }).then(res => {
+        uni.showModal({
+          title: "提示",
+          content: "绑定代理商成功!",
+          confirmText: "前往首页",
+          success: function(res) {
+            if (res.confirm) {
+              uni.reLaunch({
+                url: "/pages/index/index?path_id=" + that.path_id
+              });
+            }
           }
-        })
-        .catch(err => {
-          uni.hideLoading();
-          uni.showModal({
-            title: "提示",
-            content: "绑定失败!!!",
-            showCancel: false
-          });
         });
+      });
     }
   }
 };

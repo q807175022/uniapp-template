@@ -25,7 +25,7 @@ http.delete('user/1').then((res)=>{
 	console.log(JSON.stringify(res))
 }) 
 */
-// #ifndef H5
+// #ifdef MP
 let baseUrl =
   process.env.NODE_ENV === "development"
     ? "https://dev.ya73r.cn"

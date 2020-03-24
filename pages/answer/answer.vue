@@ -86,7 +86,7 @@
     </view>
     <cmd-transition v-if="over || !tests[0].show" name="fade-up">
       <view class="checkview">
-        <view class="btn" @click="(payVisible = true), recordUv(5)" v-if="over">
+        <view class="btn" @click="submitBefore" v-if="over">
           立即查看测试结果
         </view>
         <view class="btn" @click="startGame" v-else>
@@ -122,7 +122,7 @@ export default {
       // #ifdef MP
       original: "88.00",
       // #endif
-      // #ifdef MP
+      // #ifdef H5
       original: "188.00",
       // #endif
       windowHeight: app.globalData.systemInfo.windowHeight,
@@ -234,6 +234,14 @@ export default {
     },
     fromCharCode(number) {
       return `${String.fromCharCode(number + 65)}`;
+    },
+    submitBefore() {
+      if (this.price == 0) {
+        this.onSubmit();
+        return false;
+      }
+      this.payVisible = true;
+      tis.recordUv(5);
     },
     onSubmit(e) {
       if (this.disabledBtn) return false;

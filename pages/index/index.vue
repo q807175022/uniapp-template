@@ -4,20 +4,25 @@
     <image
       src="../../static/index-banner.jpg"
       mode="widthFix"
-      :lazy-load="true"
     />
     <image
       src="../../static/index-banner2.jpg"
       mode="widthFix"
-      :lazy-load="true"
     />
     <button type="default" id="submit-btn"  class="submit-btn" @click="onSubmit">
       <image mode="widthFix" src="../../static/index-btn.png" alt="立即测试">
     </button>
-    <view class="navs">
+
+    <yz-protocol
+      v-model="protocol"
+      @protocol="protocolVisible = true"
+      @service="serviceVisible = true"
+      @redirect="toReport"
+    />
+    <!-- <view class="navs">
       <view class="service-nav" @click="serviceVisible = true"><image src="../../static/icon-help.svg" mode="widthFix" /><text>联系客服</text></view>
       <view class="history-nav" @click="toReport"><text>点击查看历史订单</text></view>
-    </view>
+    </view> -->
     <!-- 首页内容图片 -->
     <view class="details">
       <image
@@ -82,6 +87,8 @@
      <button class="generalize-btn" @tap="generalize" v-show="agent_id && !_pathid">
       推广赚钱
     </button>
+    <!-- 协议弹框 -->
+    <protocol-dialog :visible.sync="protocolVisible" />
   </view>
 </template>
 
@@ -89,17 +96,20 @@
 // #ifdef H5
 import { setRouterHijack } from "../../utils/utils";
 // #endif
+import yzProtocol from "../../components/yz-protocol"
 import { mapGetters, mapMutations } from "vuex";
 import { getIndexUrl } from "../../api/index.js";
 import request from "../../api/request"
 import evaluate from "../../utils/evaluate.json";
 import serviceDialog from "yz-utils/service-dialog/service-dialog"
 import indexTips from "yz-utils/index-tips/index-tips"
-
+import protocolDialog from "yz-utils/protocol-dialog/protocol-dialog"
 export default {
   data() {
     return {
       baseUrl:request.config.baseUrl,
+      protocol:true,
+      protocolVisible:false,
       submitTop: 500,
       serviceVisible:false,
       isFixed: false,
@@ -112,7 +122,7 @@ export default {
     ...mapGetters(["path_id", "price","agent_id"])
   },
   components: {
-    serviceDialog,indexTips
+    serviceDialog,indexTips,yzProtocol,protocolDialog
   },
   onLoad(option) {
     this._pathid = option.path_id
@@ -136,19 +146,19 @@ export default {
         url: "/pages/index/index?path_id=" + this.path_id
       });
     },
-    onSubmit() {
+    onSubmit(){
       this.recordUv(4)
       uni.navigateTo({
         url: `/pages/answer/answer?path_id=${this.path_id}` //`/pages/answer/index?price=${this.price}&path_id=${this.path_id}`
       });
       if (uni.getStorageSync("zwGameId")) {
-          zwDivine.recordUserInfo({
-            name: "2020你会成为有钱人吗?",
-            gender: "",
-            birthday: "",
-            extra: JSON.stringify({ openid: this.openid })
-          });
-        }
+        zwDivine.recordUserInfo({
+          name: "2020你会成为有钱人吗?",
+          gender: "",
+          birthday: "",
+          extra: JSON.stringify({ openid: this.openid })
+        });
+      }
     },
     toReport() {
       //#ifdef H5
@@ -196,6 +206,22 @@ export default {
     //#ifdef H5
     setRouterHijack();
     //#endif
+  },
+  onShareAppMessage (option) {
+    // option.from === 'button'
+    return {
+      title: '专业财商评估',
+      desc: '2020快来测测你是否能够成为有钱人吧!',
+      path: '/pages/index/index?from=sharebuttonabc&path_id=' + this.path_id, // ?后面的参数会在转发页面打开时传入onLoad方法
+      imageUrl: '../../static/share.png', // 支持本地或远程图片，默认是小程序icon
+      templateId: '这是开发者后台设置的分享素材模板id',
+      success () {
+        console.log('转发发布器已调起，并不意味着用户转发成功，微头条不提供这个时机的回调');
+      },
+      fail () {
+        console.log('转发发布器调起失败');
+      }
+    }
   }
 };
 </script>
@@ -261,16 +287,6 @@ export default {
   display: flex;
   justify-content: space-between;
   font-size:28rpx;
-  .service-nav{
-    display: flex;
-    white-space: nowrap;
-    align-items: center;
-    image{
-      width:30rpx;
-      height: 30rpx;
-      margin-right: 12rpx;
-    }
-  }
   .history-nav{
     position: relative;
     &::after{
